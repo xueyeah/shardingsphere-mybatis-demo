@@ -1,0 +1,26 @@
+shardingRule:
+  tables:
+    t_order:
+      actualDataNodes: ds_${0..1}.t_order_${0..1}
+      databaseStrategy:
+        inline:
+          shardingColumn: user_id
+          algorithmExpression: ds_${user_id % 2}
+      tableStrategy:
+        inline:
+          shardingColumn: order_id
+          algorithmExpression: t_order_${order_id % 2}
+      keyGeneratorColumnName: order_id
+
+  bindingTables:
+    - t_order
+  broadcastTables:
+    - t_config
+
+  defaultDataSourceName: ds_0
+  defaultTableStrategy:
+    none:
+  defaultKeyGeneratorClassName: io.shardingsphere.core.keygen.DefaultKeyGenerator
+
+props:
+  sql.show: true
